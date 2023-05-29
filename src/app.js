@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import onChange from 'on-change'
+import render from './view';
 
 //функция валидации
 const validate = (url, urls ) => {
@@ -8,15 +9,6 @@ const validate = (url, urls ) => {
     .then(() => {})
     .catch((error) => error);
   };
- 
-  //VIEW
-  const render = (elements, initState) => {
-   if (initState.statusInput === 'valid') {
-            elements.input.classList.remove('is-invalid');
-   } else {
-            elements.input.classList.add('is-invalid');
-    }
-};
 
 export default () => {
     const initState = {
