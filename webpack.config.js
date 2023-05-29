@@ -1,28 +1,8 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import path from 'path';
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
 
-const __dirname = path.dirname(__filename);
-
-const isProduction = process.env.NODE_ENV == "production";
-
-const config = {
-  entry: "./src/index.js",
-  output: {
-    path: path.resolve(__dirname, "dist"),
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: "index.html",
-    }),
-  ],
-  devServer: {
-    static: path.resolve(__dirname, 'dist'),
-    hot: true,
-    port: 8080,
-  },
-
+export default {
+  mode: process.env.NODE_ENV || 'development',
+  entry: './src/index.js',
   module: {
     rules: [
       {
@@ -50,13 +30,12 @@ const config = {
       },
     ],
   },
-}
-
-module.exports = () => {
-  if (isProduction) {
-    config.mode = "production";
-  } else {
-    config.mode = "development";
-  }
-  return config;
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: 'index.html',
+    }),
+  ],
+  output: {
+    clean: true,
+  },
 };
