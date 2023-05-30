@@ -6,13 +6,14 @@ import render from './view.js';
 const validate = (url, urls ) => {
     const schema = yup.string().required().url().notOneOf(urls).trim();
     return schema.validate(url)
-    .then(() => {})
-    .catch((error) => error);
+    .then(() => {});
   };
 
 export default () => {
     const initState = {
+        form: {
             statusInput: 'valid',
+        },
             feeds: [],
         };
         
