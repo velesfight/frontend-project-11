@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import onChange from 'on-change'
-import render from './view';
+import render from './view.js';
 
 //функция валидации
 const validate = (url, urls ) => {

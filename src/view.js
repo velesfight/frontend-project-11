@@ -1,5 +1,5 @@
    //VIEW
-  const render = (elements, initState) => {
+ export default (elements, initState) => {
     if (initState.statusInput === 'valid') {
              elements.input.classList.remove('is-invalid');
     } else {
