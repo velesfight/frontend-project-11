@@ -6,16 +6,19 @@ import render from './view.js';
 const validate = (url, urls ) => {
     const schema = yup.string().required().url().notOneOf(urls).trim();
     return schema.validate(url)
-    .then(() => {});
+    .then(() => {})
+    .catch((err) => {
+        err.errors;
+    })
   };
 
 export default () => {
     const initState = {
         form: {
-            statusInput: 'valid',
+            isValid: null,
         },
             feeds: [],
-            eroor: null,
+            errors: null,
         };
         
         const elements = {
@@ -35,12 +38,13 @@ export default () => {
         const beforeUrl = state.feeds.map((url) => url);
         validate(currentUrl, beforeUrl)
         .then(() => {
-          watchedState.statusInput = 'valid';
+          watchedState.isValid = 'true';
            elements.form.reset();
            elements.input.focus();
         })
-        .catch(() => {
-            watchedState.statusInput = 'invalid';
+        .catch((error) => {
+            watchedState.isValid = 'false';
+            watchedState.error = 
         })
 });
 };

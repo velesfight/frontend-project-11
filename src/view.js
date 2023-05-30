@@ -1,16 +1,11 @@
    //VIEW
  export default (elements, initState) => {
-    if (initState.statusInput === 'valid') {
+    if (initState.statusInput === 'true') {
              elements.input.classList.remove('is-invalid');
-    } 
-    if (initState.statusInput === 'invalid') {
+    }  else {
              elements.input.classList.add('is-invalid');
              elements.feedback.classList.remove('text-success');
              elements.feedback.classList.add('text-danger');
+             elements.feedback.textContent = initState.errors;
     }
-     if (initState.statusInput === 'success') {
-      elements.input.classList.remove('is-invalid');
-      elements.feedback.classList.remove('text-danger');
-      elements.feedback.classList.add('text-success');
-     }
  };
