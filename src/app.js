@@ -15,11 +15,13 @@ export default () => {
             statusInput: 'valid',
         },
             feeds: [],
+            eroor: null,
         };
         
         const elements = {
             form: document.querySelector('form'),
             input: document.querySelector('input'),
+            feedback: document.querySelector('.feedback'),
             };
 
         //слежение за initState
