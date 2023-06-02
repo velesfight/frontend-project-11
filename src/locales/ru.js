@@ -1,5 +1,5 @@
 export default {
-translation: {
+  translation: {
     message: {
       notEmpty: 'Заполните это поле',
       invalidUrl: 'Ссылка должна быть валидным URL',
@@ -9,9 +9,9 @@ translation: {
       rssLoaded: 'RSS успешно загружен',
     },
     cards: {
-        feeds: 'Фиды',
-        posts: 'Посты',
-        button: 'Просмотр'
-      }
-    }
-  };
+      feeds: 'Фиды',
+      posts: 'Посты',
+      button: 'Просмотр',
+    },
+  },
+};
