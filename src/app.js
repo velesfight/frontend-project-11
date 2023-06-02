@@ -75,10 +75,22 @@ export default () => {
       });
   });
 };
-const streamDownld = (urls) => urls.map((url) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`)); //скачали потоки
 
+//парсер
 const parser = new DOMParser();
-const doc = parser.parseFromString(stringContainingXMLSource, " ")
-.then(function (response) {
-  console.log(response.data);
-});
+const doc = (string) => parser.parseFromString(string, 'application/xml');
+const errorNode = doc.querySelector("parsererror");
+if (errorNode) {
+  throw new Error('no valid Rss');
+} else {
+  // parsing succeeded
+}
+//потоки
+const streamDownld = (urls) => urls.map((url) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`))
+  .then((response) => doc(response))
+  
+  //if (response.ok) return response.json()
+  //throw new Error('Network response was not ok.')
+//})
+//.then(data => console.log(data.contents));
+///feed?unit=day//?
