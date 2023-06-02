@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import onChange from 'on-change';
 import i18next from 'i18next';
+import axios from 'axios';
 import render from './view.js';
 import resources from './locales/index.js';
 
@@ -74,3 +75,10 @@ export default () => {
       });
   });
 };
+const streamDownld = (urls) => urls.map((url) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`)); //скачали потоки
+
+const parser = new DOMParser();
+const doc = parser.parseFromString(stringContainingXMLSource, " ")
+.then(function (response) {
+  console.log(response.data);
+});

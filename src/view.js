@@ -43,7 +43,6 @@ const makeContainerFeeds = (feeds, i18n) => {
     description.textContent = feed.description;// практические уроки
 
     container.replaceChildren(div, ul, li, title, description);
-    return container; // li h3 p
   });
 };
 
@@ -63,31 +62,36 @@ const makeContainerPosts = (posts, i18n) => {
 
   cardBody.append(cardTitle);
   cardContainer.append(cardBody);
-  cardContainer.append(ul);
+
+  posts.forEach((post) => {
   //
-  const id = _.uniqueId();
-  const button = document.createElement('button');
-  button.textContent = i18n.t('renderPosts.button');
-  button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
-  button.setAttribute('type', 'button');
-  button.setAttribute('data-id', id);
-  button.setAttribute('data-bs-toggle', 'modal');
-  button.setAttribute('data-bs-target', '#modal');
+    const button = document.createElement('button');
+    button.textContent = i18n.t('cards.button');
+    button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    button.setAttribute('type', 'button');
+    button.setAttribute('data-id', post.id);
+    button.setAttribute('data-bs-toggle', 'modal');
+    button.setAttribute('data-bs-target', '#modal');
 
-  const li = document.createElement('li');
-  li.classList.add(
-    'list-group-item',
-    'd-flex',
-    'justify-content-between',
-    'align-items-start',
-    'border-0',
-    'border-end-0',
-  );
+    const li = document.createElement('li');
+    li.classList.add(
+      'list-group-item',
+      'd-flex',
+      'justify-content-between',
+      'align-items-start',
+      'border-0',
+      'border-end-0',
+    );
 
-  const a = document.createElement('a');
-  a.setAttribute('href', link);
-  a.setAttribute('data-id', id);
-  a.setAttribute('target', '_blank');
-  a.setAttribute('rel', 'noopener noreferrer');
-  a.textContent = ''; // ?
+    const a = document.createElement('a');
+    a.setAttribute('href', post.link);
+    a.setAttribute('data-id', post.id);
+    a.setAttribute('target', '_blank');
+    a.setAttribute('rel', 'noopener noreferrer');
+    a.textContent = post.title; // ?
+
+    li.append(a, button);
+    ul.append(li);
+  });
+  cardContainer.replaceChildren(ul);
 };
