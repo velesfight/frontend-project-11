@@ -2,15 +2,17 @@ import * as yup from 'yup';
 import onChange from 'on-change';
 import i18next from 'i18next';
 import axios from 'axios';
+import _ from 'lodash';
 import render from './view.js';
 import resources from './locales/index.js';
+import parser from './parser.js';
 
 //функция валидации
 const validate = (url, urls) => {
   const schema = yup.string().required().url().notOneOf(urls);
   return schema.validate(url)
     .then(() => {})
-    .catch((error) => error.i18n.t('netWorkError'));
+    .catch((error) => error.message);
 };
 
 export default () => {
@@ -35,22 +37,21 @@ export default () => {
 
   const defaultLang = 'ru';
 
-  yup.setLocale({
-    mixed: {
-      required: 'notEmpty',
-      notOneOf: 'rssAlreadyExists',
-    },
-    string: {
-      url: 'invalidUrl',
-    },
-  });
-
   const i18n = i18next.createInstance();
   i18n.init({
     debug: false,
     lng: defaultLang,
     resources,
-  }); //слежение за initState
+  })
+    .then(() => yup.setLocale({
+      mixed: {
+        required: 'notEmpty',
+        notOneOf: 'rssAlreadyExists',
+      },
+      string: {
+        url: 'invalidUrl',
+      },
+    }));
 
   const watchedState = onChange(initState, render(initState, elements));
 
@@ -70,27 +71,12 @@ export default () => {
           watchedState.isValid = 'true';
           watchedState.statusProcess = 'sending';
           watchedState.errors = null;
-          watchedState.form.urls.push(currentUrl);// нет ошибки надо запустить функцию загрузки
-        }
+          watchedState.form.urls.push(currentUrl)
+            .then(() => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${currentUrl}`)}`)
+              .then((response) => parser(response.data)));
+          const idFeed = _.uniqueId();
+          feed.id = idFeed;
+          post }
       });
   });
 };
-
-//парсер
-const parser = new DOMParser();
-const doc = (string) => parser.parseFromString(string, 'application/xml');
-const errorNode = doc.querySelector("parsererror");
-if (errorNode) {
-  throw new Error('no valid Rss');
-} else {
-  // parsing succeeded
-}
-//потоки
-const streamDownld = (urls) => urls.map((url) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`))
-  .then((response) => doc(response))
-  
-  //if (response.ok) return response.json()
-  //throw new Error('Network response was not ok.')
-//})
-//.then(data => console.log(data.contents));
-///feed?unit=day//?
