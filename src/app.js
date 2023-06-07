@@ -11,9 +11,11 @@ import parser from './parser.js';
 const validate = (url, urls) => {
   const schema = yup.string().required().url().notOneOf(urls);
   return schema.validate(url)
-    .then(() => {})
+    .then(() => null)
     .catch((error) => error.message);
 };
+
+const loadUrl = (url) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`);
 
 export default () => {
   const initState = {
@@ -72,11 +74,20 @@ export default () => {
           watchedState.statusProcess = 'sending';
           watchedState.errors = null;
           watchedState.form.urls.push(currentUrl)
-            .then(() => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${currentUrl}`)}`)
-              .then((response) => parser(response.data)));
-          const idFeed = _.uniqueId();
-          feed.id = idFeed;
-          post }
+            .then(() => loadUrl(currentUrl))
+            .then((response) => response.data.contents)
+            .then((data) => {
+              const { feed, post } = parser(data);
+              const idFeed = _.uniqueId();
+              feed.id = idFeed;
+              const postId = post.map((item) => ({
+                ...item,
+                idFeed,
+                id: _.uniqueId(),
+              }));
+              return postId;
+            });
+        }
       });
   });
 };

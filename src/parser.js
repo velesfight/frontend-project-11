@@ -11,8 +11,6 @@ export default (string) => {
       title: titleFeed,
       description: descriptionFeed,
     };
-    const idFeed = _.uniqueId();
-    feed.id = idFeed;
 
     const items = Array.from(doc.querySelectorAll('item'));
     const post = items.map((item) => {
@@ -28,6 +26,5 @@ export default (string) => {
     return { feed, post };
   }
 };
-
 
 // id, title, decription//ссылка название ссылки
