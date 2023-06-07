@@ -28,6 +28,10 @@ const loadUrl = (url, watchedState) => axios.get(`https://allorigins.hexlet.app/
     }));
     watchedState.feeds.push(feed);
     watchedState.posts.push(postId);
+  })
+  .catch((error) => {
+    watchedState.statusProcess = 'failed';
+    console.log(error.message);
   });
 
 export default () => {
