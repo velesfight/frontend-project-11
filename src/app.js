@@ -15,7 +15,20 @@ const validate = (url, urls) => {
     .catch((error) => error.message);
 };
 
-const loadUrl = (url) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`);
+const loadUrl = (url, watchedState) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`)
+  .then((response) => response.data.contents)
+  .then((data) => {
+    const { feed, post } = parser(data);
+    const idFeed = _.uniqueId();
+    feed.id = idFeed;
+    const postId = post.map((item) => ({
+      ...item,
+      idFeed,
+      id: _.uniqueId(),
+    }));
+    watchedState.feeds.push(feed);
+    watchedState.posts.push(postId);
+  });
 
 export default () => {
   const initState = {
@@ -73,20 +86,8 @@ export default () => {
           watchedState.isValid = 'true';
           watchedState.statusProcess = 'sending';
           watchedState.errors = null;
-          watchedState.form.urls.push(currentUrl)
-            .then(() => loadUrl(currentUrl))
-            .then((response) => response.data.contents)
-            .then((data) => {
-              const { feed, post } = parser(data);
-              const idFeed = _.uniqueId();
-              feed.id = idFeed;
-              const postId = post.map((item) => ({
-                ...item,
-                idFeed,
-                id: _.uniqueId(),
-              }));
-              return postId;
-            });
+          watchedState.form.urls.push(currentUrl);
+          loadUrl(currentUrl);
         }
       });
   });
