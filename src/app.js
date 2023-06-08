@@ -30,8 +30,7 @@ const loadUrl = (url, watchedState) => axios.get(`https://allorigins.hexlet.app/
     watchedState.posts.push(postId);
   })
   .catch((error) => {
-    watchedState.statusProcess = 'failed';
-    console.log(error.message);
+    watchedState.errors = error.message;// eslint-disable-line
   });
 
 export default () => {
@@ -87,11 +86,11 @@ export default () => {
           watchedState.statusProcess = 'filling';
           watchedState.errors = error;// есть ошибка и надо ее записать в стейт
         } else {
+          loadUrl(currentUrl);
           watchedState.isValid = 'true';
           watchedState.statusProcess = 'sending';
           watchedState.errors = null;
           watchedState.form.urls.push(currentUrl);
-          loadUrl(currentUrl);
         }
       });
   });
