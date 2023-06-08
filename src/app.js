@@ -7,7 +7,6 @@ import render from './view.js';
 import resources from './locales/index.js';
 import parser from './parser.js';
 
-//функция валидации
 const validate = (url, urls) => {
   const schema = yup.string().required().url().notOneOf(urls);
   return schema.validate(url)
@@ -28,14 +27,15 @@ const loadUrl = (url, watchedState) => axios.get(`https://allorigins.hexlet.app/
     }));
     watchedState.feeds.push(feed);
     watchedState.posts.push(postId);
-  })
+  });
+setTimeout(loadUrl, 5000)
   .catch((error) => {
     watchedState.errors = error.message;// eslint-disable-line
   });
 
 export default () => {
   const initState = {
-    statusProcess: 'filling', //sending finished failed 
+    statusProcess: 'filling',
     form: {
       isValid: null,
       urls: [],
@@ -73,12 +73,11 @@ export default () => {
 
   const watchedState = onChange(initState, render(initState, elements));
 
-  //обработчик
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const currentUrl = formData.get('url').trim();
-    const beforeUrl = initState.feeds.map((url) => url);
+    const beforeUrl = initState.urls.map((url) => url);
     validate(currentUrl, beforeUrl)
       .then((error) => {
         if (error) {
