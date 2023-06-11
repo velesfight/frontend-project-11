@@ -14,6 +14,15 @@ const validate = (url, urls) => {
     .catch((error) => error.message);
 };
 
+const addId = (posts, feedId) => {
+  const postsId = posts.map((post) => ({
+    ...post,
+    feedId,
+    id:  _.uniqueId(),
+  }));
+  return postsId;
+};
+
 const loadUrl = (url, watchedState) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`)
   .then((response) => response.data.contents)
   .then((data) => {
@@ -32,6 +41,29 @@ setTimeout(loadUrl, 5000)
   .catch((error) => {
     watchedState.errors = error.message;// eslint-disable-line
   });
+
+const parseUrl = (url) => {
+  const copyUrl = new URL('https://allorigins.hexlet.app/get');
+  copyUrl.searchParams.set('url', url);
+  copyUrl.searchParams.set('disableCache', true);
+  return copyUrl;
+};
+
+const getUpdates = (watchedState) => {
+  const feedUrl = watchedState.feeds.map((feed) => feed.url);
+  const request = axios.get(parseUrl(feedUrl));
+
+  return request.then((response) => {
+    const { posts } = parser(response.data.contents);
+    const postsLinks = watchedState.posts.map((post) => post.link);
+
+    const newPosts = posts.filter((post) => !postsLinks.includes(post.link));
+    const idNewPost = _.uniqueId();
+    const newPost = addId(newPosts, idNewPost);
+    watchedState.posts.push(...newPost)
+      .then(setTimeout(() => getUpdates(watchedState), 5000));
+  });
+};
 
 export default () => {
   const initState = {
