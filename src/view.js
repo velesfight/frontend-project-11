@@ -14,7 +14,6 @@ export default (elements, initState, i18n) => {
     feedback.textContent = initState.errors;
   }
 };
-
 const makeContainerFeeds = (feeds, i18n) => {
   const container = document.createElement('div');
   container.classList.add('card', 'border-0');
@@ -46,7 +45,7 @@ const makeContainerFeeds = (feeds, i18n) => {
   });
 };
 
-const makeContainerPosts = (posts, i18n) => {
+const makeContainerPosts = (initState, i18n) => {
   const cardContainer = document.createElement('div');
   cardContainer.classList.add('card', 'border-0');
 
@@ -63,15 +62,15 @@ const makeContainerPosts = (posts, i18n) => {
   cardBody.append(cardTitle);
   cardContainer.append(cardBody);
 
-  posts.forEach((post) => {
-  //
+  initState.posts.forEach((post) => {
     const button = document.createElement('button');
     button.textContent = i18n.t('cards.button');
     button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
     button.setAttribute('type', 'button');
-    button.setAttribute('data-id', post.id);
+    button.setAttribute('data-id', `${post.id}`);
     button.setAttribute('data-bs-toggle', 'modal');
     button.setAttribute('data-bs-target', '#modal');
+    button.textContent = i18n.t('cards.button');
 
     const li = document.createElement('li');
     li.classList.add(
@@ -84,14 +83,38 @@ const makeContainerPosts = (posts, i18n) => {
     );
 
     const a = document.createElement('a');
-    a.setAttribute('href', post.link);
-    a.setAttribute('data-id', post.id);
+    a.setAttribute('href', `${post.link}`);
+    a.setAttribute('data-id', `${post.id}`);
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
-    a.textContent = post.title; // ?
+    a.textContent = post.title;
+
+    if (initState.readPost.has(post.id)) {
+      a.classList.add('fw-normal', 'link-secondary');
+    } else {
+      a.classList.add('fw-bold');
+    }
 
     li.append(a, button);
     ul.append(li);
   });
   cardContainer.replaceChildren(ul);
+
+  const makeModal = (readedId) => {
+    const readPost = initState.posts.find(({ id }) => id === readedId);
+    const {
+      id, title, description, link,
+    } = readPost;
+
+    const modal = document.querySelector('.modal');
+
+    const modalTitle = document.querySelector('.modal-title');
+    const modalBody = document.querySelector('.modal-body');
+    const modalLink = document.querySelector('.modal-link');
+
+    modal.setAttribute('data-id', id);
+    modalTitle.textContent = title;
+    modalBody.textContent = description;
+    modalLink.setAttribute('href', link);
+  };
 };

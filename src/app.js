@@ -7,6 +7,8 @@ import render from './view.js';
 import resources from './locales/index.js';
 import parser from './parser.js';
 
+console.log('loading');
+
 const validate = (url, urls) => {
   const schema = yup.string().required().url().notOneOf(urls);
   return schema.validate(url)
@@ -18,7 +20,7 @@ const addId = (posts, feedId) => {
   const postsId = posts.map((post) => ({
     ...post,
     feedId,
-    id:  _.uniqueId(),
+    id: _.uniqueId(),
   }));
   return postsId;
 };
@@ -36,8 +38,7 @@ const loadUrl = (url, watchedState) => axios.get(`https://allorigins.hexlet.app/
     }));
     watchedState.feeds.push(feed);
     watchedState.posts.push(postId);
-  });
-setTimeout(loadUrl, 5000)
+  })
   .catch((error) => {
     watchedState.errors = error.message;// eslint-disable-line
   });
@@ -52,7 +53,6 @@ const parseUrl = (url) => {
 const getUpdates = (watchedState) => {
   const feedUrl = watchedState.feeds.map((feed) => feed.url);
   const request = axios.get(parseUrl(feedUrl));
-
   return request.then((response) => {
     const { posts } = parser(response.data.contents);
     const postsLinks = watchedState.posts.map((post) => post.link);
@@ -60,8 +60,8 @@ const getUpdates = (watchedState) => {
     const newPosts = posts.filter((post) => !postsLinks.includes(post.link));
     const idNewPost = _.uniqueId();
     const newPost = addId(newPosts, idNewPost);
-    watchedState.posts.push(...newPost)
-      .then(setTimeout(() => getUpdates(watchedState), 5000));
+    watchedState.posts.push(...newPost);
+    Promise.all(request).then(setTimeout(() => getUpdates(watchedState), 5000));
   });
 };
 
@@ -75,6 +75,12 @@ export default () => {
     posts: [],
     feeds: [],
     errors: null,
+    uiState: {
+      readPost: new Set(),
+      modal: {
+        readedId: null,
+      },
+    },
   };
 
   const elements = {
@@ -93,36 +99,47 @@ export default () => {
     lng: defaultLang,
     resources,
   })
-    .then(() => yup.setLocale({
-      mixed: {
-        required: 'notEmpty',
-        notOneOf: 'rssAlreadyExists',
-      },
-      string: {
-        url: 'invalidUrl',
-      },
-    }));
-
-  const watchedState = onChange(initState, render(initState, elements));
-
-  elements.form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const currentUrl = formData.get('url').trim();
-    const beforeUrl = initState.urls.map((url) => url);
-    validate(currentUrl, beforeUrl)
-      .then((error) => {
-        if (error) {
-          watchedState.isValid = 'false';
-          watchedState.statusProcess = 'filling';
-          watchedState.errors = error;// есть ошибка и надо ее записать в стейт
-        } else {
-          loadUrl(currentUrl);
-          watchedState.isValid = 'true';
-          watchedState.statusProcess = 'sending';
-          watchedState.errors = null;
-          watchedState.form.urls.push(currentUrl);
-        }
+    .then(() => {
+      yup.setLocale({
+        mixed: {
+          required: 'notEmpty',
+          notOneOf: 'rssAlreadyExists',
+        },
+        string: {
+          url: 'invalidUrl',
+        },
       });
-  });
+
+      const watchedState = onChange(initState, render(initState, elements));
+
+      elements.form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const currentUrl = formData.get('url').trim();
+        const beforeUrl = initState.urls.map((url) => url);
+        validate(currentUrl, beforeUrl)
+          .then((error) => {
+            if (error) {
+              watchedState.isValid = 'false';
+              watchedState.statusProcess = 'filling';
+              watchedState.errors = error;// есть ошибка и надо ее записать в стейт
+            } else {
+              loadUrl(currentUrl);
+              watchedState.isValid = 'true';
+              watchedState.statusProcess = 'sending';
+              watchedState.errors = null;
+              watchedState.form.urls.push(currentUrl);
+            }
+          });
+      });
+      elements.postsCard.addEventListener('click', (e) => {
+        const { id } = e.target.dataset;
+        if (!id) {
+          return;
+        }
+        watchedState.uiState.modal.readedId = id;
+        console.log(id);
+        watchedState.readPost.add(id);
+      });
+    });
 };

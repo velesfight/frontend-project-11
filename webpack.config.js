@@ -11,6 +11,11 @@ export default {
       template: 'index.html',
     }),
   ],
+  devServer: {
+    host: 'localhost',
+    port: 5000,
+    open: true,
+  },
   module: {
     rules: [
       {
