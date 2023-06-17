@@ -42,7 +42,7 @@ const loadUrl = (url, watchedState) => axios.get(`https://allorigins.hexlet.app/
   .catch((error) => {
     watchedState.errors = error.message;// eslint-disable-line
   });
-
+debugger
 const parseUrl = (url) => {
   const copyUrl = new URL('https://allorigins.hexlet.app/get');
   copyUrl.searchParams.set('url', url);
@@ -77,9 +77,7 @@ export default () => {
     errors: null,
     uiState: {
       readPost: new Set(),
-      modal: {
-        readedId: null,
-      },
+      modalId: null,
     },
   };
 
@@ -109,8 +107,7 @@ export default () => {
           url: 'invalidUrl',
         },
       });
-
-      const watchedState = onChange(initState, render(initState, elements));
+      const watchedState = onChange(initState, render(initState, elements, i18n));
 
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -132,14 +129,16 @@ export default () => {
             }
           });
       });
+
       elements.postsCard.addEventListener('click', (e) => {
         const { id } = e.target.dataset;
         if (!id) {
           return;
         }
-        watchedState.uiState.modal.readedId = id;
+        watchedState.uiState.modalId = id;
         console.log(id);
         watchedState.readPost.add(id);
       });
+      getUpdates(watchedState);
     });
 };

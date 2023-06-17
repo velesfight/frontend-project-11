@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export default (elements, initState, i18n) => {
   const { input, feedback, form } = elements;
   if (initState.form.isValid === 'true') {
@@ -100,8 +98,8 @@ const makeContainerPosts = (initState, i18n) => {
   });
   cardContainer.replaceChildren(ul);
 
-  const makeModal = (readedId) => {
-    const readPost = initState.posts.find(({ id }) => id === readedId);
+  const makeModal = (modalId) => {
+    const readPost = initState.posts.find(({ id }) => id === modalId);
     const {
       id, title, description, link,
     } = readPost;
