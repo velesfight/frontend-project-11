@@ -26,9 +26,8 @@ const addId = (posts, feedId) => {
 };
 
 const loadUrl = (url, watchedState) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`)
-  .then((response) => response.data.contents)
-  .then((data) => {
-    const { feed, post } = parser(data);
+  .then((response) => {
+    const { feed, post } = parser(response.data.contents);
     const idFeed = _.uniqueId();
     feed.id = idFeed;
     const postId = post.map((item) => ({
@@ -37,12 +36,12 @@ const loadUrl = (url, watchedState) => axios.get(`https://allorigins.hexlet.app/
       id: _.uniqueId(),
     }));
     watchedState.feeds.push(feed);
-    watchedState.posts.push(postId);
+    watchedState.posts.push(...postId);
   })
   .catch((error) => {
     watchedState.errors = error.message;// eslint-disable-line
   });
-debugger
+
 const parseUrl = (url) => {
   const copyUrl = new URL('https://allorigins.hexlet.app/get');
   copyUrl.searchParams.set('url', url);

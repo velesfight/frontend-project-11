@@ -7,6 +7,7 @@ export default (elements, initState, i18n) => {
     input.focus();
   } else {
     input.classList.add('is-invalid');
+    console.log('inp', input);
     feedback.classList.remove('text-success');
     feedback.classList.add('text-danger');
     feedback.textContent = initState.errors;
