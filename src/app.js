@@ -30,8 +30,8 @@ const loadUrl = (url, watchedState) => axios.get(`https://allorigins.hexlet.app/
     const { feed, post } = parser(response.data.contents);
     const idFeed = _.uniqueId();
     feed.id = idFeed;
-    const postId = post.map((item) => ({
-      ...item,
+    const postId = post.map((items) => ({
+      ...items,
       idFeed,
       id: _.uniqueId(),
     }));
