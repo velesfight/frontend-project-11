@@ -7,8 +7,6 @@ import render from './view.js';
 import resources from './locales/index.js';
 import parser from './parser.js';
 
-console.log('loading');
-
 const validate = (url, urls) => {
   const schema = yup.string().required().url().notOneOf(urls);
   return schema.validate(url)
@@ -16,27 +14,20 @@ const validate = (url, urls) => {
     .catch((error) => error.message);
 };
 
-const addId = (posts, feedId) => {
-  const postsId = posts.map((post) => ({
-    ...post,
-    feedId,
-    id: _.uniqueId(),
-  }));
-  return postsId;
-};
+const addId = (posts, feedId) => posts.map((post) => ({
+  ...post,
+  feedId: _.uniqueId(),
+  id: feedId,
+}));
 
 const loadUrl = (url, watchedState) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`)
   .then((response) => {
     const { feed, post } = parser(response.data.contents);
     const idFeed = _.uniqueId();
     feed.id = idFeed;
-    const postId = post.map((items) => ({
-      ...items,
-      idFeed,
-      id: _.uniqueId(),
-    }));
+    const postWithId = addId(post, idFeed);
     watchedState.feeds.push(feed);
-    watchedState.posts.push(...postId);
+    watchedState.posts.push(...postWithId);
   })
   .catch((error) => {
     watchedState.errors = error.message;// eslint-disable-line
@@ -46,6 +37,7 @@ const parseUrl = (url) => {
   const copyUrl = new URL('https://allorigins.hexlet.app/get');
   copyUrl.searchParams.set('url', url);
   copyUrl.searchParams.set('disableCache', true);
+  console.log(copyUrl);
   return copyUrl;
 };
 

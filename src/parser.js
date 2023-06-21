@@ -26,5 +26,3 @@ export default (string) => {
     return { feed, post };
   }
 };
-
-// id, title, decription//ссылка название ссылки
