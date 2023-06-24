@@ -78,6 +78,12 @@ export default () => {
     feedback: document.querySelector('.feedback'),
     postsCard: document.querySelector('.posts'),
     feedsCard: document.querySelector('.feeds'),
+    submit: document.querySelector('.submit'),
+    modal: document.querySelector('.modal'),
+
+    modalTitle: document.querySelector('.modal-title'),
+    modalBody: document.querySelector('.modal-body'),
+    modalLink: document.querySelector('.modal-link'),
   };
 
   const defaultLang = 'ru';

@@ -1,12 +1,23 @@
-export default (initState, elements, i18n) => {
+export default (initState, elements, i18n) => (path, value) => {
+  const {
+    form,
+    input,
+    postsCard,
+    feedsCard,
+    feedback,
+    submit,
+    modal,
+    modalTitle,
+    modalBody,
+    modalLink,
+  } = elements;
+
   const renderForm = () => {
-    const { input, feedback, form } = elements;
     if (initState.form.isValid === 'true') {
       input.classList.remove('is-invalid');
       feedback.textContent = i18n.t('message.rssLoaded'); // ?
       form.reset();
       input.focus();
-      debugger
     } else {
       input.classList.add('is-invalid');
       feedback.classList.remove('text-success');
@@ -14,6 +25,7 @@ export default (initState, elements, i18n) => {
       feedback.textContent = initState.errors;
     }
   };
+
   const makeContainerFeeds = (feeds) => {
     const feedsContainer = document.createElement('div');
     feedsContainer.classList.add('card', 'border-0');
@@ -42,6 +54,7 @@ export default (initState, elements, i18n) => {
 
       feedsContainer.replaceChildren(div, ul, li, title, description);
     });
+    feedsCard.append(feedsContainer);
   };
 
   const makeContainerPosts = (posts, readPost) => {
@@ -59,7 +72,7 @@ export default (initState, elements, i18n) => {
     ul.classList.add('list-group', 'border-0', 'rounded-0');
 
     cardBody.append(cardTitle);
-    cardContainer.append(cardBody);
+    cardContainer.appendChild(cardBody);
 
     posts.forEach((post) => {
       const button = document.createElement('button');
@@ -98,6 +111,7 @@ export default (initState, elements, i18n) => {
       ul.append(li);
     });
     cardContainer.replaceChildren(ul);
+    postsCard.appendChild(cardContainer);
   };
 
   const makeModal = (modalId, posts) => {
@@ -105,16 +119,48 @@ export default (initState, elements, i18n) => {
     const {
       id, title, description, link,
     } = readPost;
-
-    const modal = document.querySelector('.modal');
-
-    const modalTitle = document.querySelector('.modal-title');
-    const modalBody = document.querySelector('.modal-body');
-    const modalLink = document.querySelector('.modal-link');
-
     modal.setAttribute('data-id', id);
     modalTitle.textContent = title;
     modalBody.textContent = description;
     modalLink.setAttribute('href', link);
   };
+
+  const loading = () => {
+    switch (value) {
+      case 'filing':
+        submit.disabled = false;
+        feedback.textContent = i18n.t('message.notEmpty');
+        break;
+      case 'sending':
+        submit.disabled = true;
+        break;
+      case 'finished':
+        submit.disabled = false;
+        feedback.classList.add('text-success');
+        feedback.textContent = i18n.t('message.rssLoaded');
+        break;
+      case 'failed':
+        submit.disabled = false;
+        feedback.classList.add('text-danger');
+        feedback.textContent = i18n.t(`errors.${[initState.errors]}`);
+        break;
+      default:
+        break;
+    }
+  };
+
+  switch (path) {
+    case 'form': renderForm(initState, elements, i18n);
+      break;
+    case 'post': makeContainerPosts(initState, elements, i18n);
+      break;
+    case 'feed': makeContainerFeeds(initState, elements, i18n);
+      break;
+    case 'modal': makeModal(initState, i18n);
+      break;
+    case 'loading': loading(initState, elements, i18n);
+      break;
+    default:
+      break;
+  }
 };
