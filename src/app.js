@@ -37,23 +37,25 @@ const parseUrl = (url) => {
   const copyUrl = new URL('https://allorigins.hexlet.app/get');
   copyUrl.searchParams.set('url', url);
   copyUrl.searchParams.set('disableCache', true);
-  console.log(copyUrl);
-  return copyUrl;
+  return copyUrl.toString();
 };
 
 const getUpdates = (watchedState) => {
   const feedUrl = watchedState.feeds.map((feed) => feed.url);
-  const request = axios.get(parseUrl(feedUrl));
-  return request.then((response) => {
-    const { posts } = parser(response.data.contents);
-    const postsLinks = watchedState.posts.map((post) => post.link);
+  const request = axios.get(parseUrl(feedUrl))
+    .then((response) => {
+      const { posts } = parser(response.data.contents);
+      const postsLinks = watchedState.posts.map((post) => post.link);
 
-    const newPosts = posts.filter((post) => !postsLinks.includes(post.link));
-    const idNewPost = _.uniqueId();
-    const newPost = addId(newPosts, idNewPost);
-    watchedState.posts.push(...newPost);
-    Promise.all(request).then(setTimeout(() => getUpdates(watchedState), 5000));
-  });
+      const newPosts = posts.filter((post) => !postsLinks.includes(post.link));
+      const idNewPost = _.uniqueId();
+      const newPost = addId(newPosts, idNewPost);
+      watchedState.posts.unshift(...newPost);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  Promise.all(request).then(setTimeout(() => getUpdates(watchedState), 5000));
 };
 
 export default () => {
