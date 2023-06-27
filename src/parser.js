@@ -1,12 +1,10 @@
 export default (contents) => {
-  debugger
   const parser = new DOMParser();
   const doc = parser.parseFromString(contents, 'text/xml');
   const errorNode = doc.querySelector('parsererror');
   if (errorNode) {
     const error = new Error(errorNode.textContent);
     error.isParseError = true;
-    debugger
     throw error;
   }
   const titleFeed = doc.querySelector('title').textContent;

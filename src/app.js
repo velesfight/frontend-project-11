@@ -41,23 +41,26 @@ const parseUrl = (url) => {
 };
 
 const getUpdates = (watchedState) => {
-  const feedUrl = watchedState.feeds.map((feed) => feed.url);
-  const request = axios.get(parseUrl(feedUrl))
-    .then((response) => {
-      const { posts } = parser(response.data.contents);
-      const postsLinks = watchedState.posts.map((post) => post.link);
+  const feedUrl = watchedState.feeds.map(({ url }) => {
+    const request = axios.get(parseUrl(url));
 
-      const newPosts = posts.filter((post) => !postsLinks.includes(post.link));
-      const idNewPost = _.uniqueId();
-      const newPost = addId(newPosts, idNewPost);
-      watchedState.posts.unshift(...newPost);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-  Promise.all(request).then(setTimeout(() => getUpdates(watchedState), 5000));
+    return request
+      .then((response) => {
+        const { posts } = parser(response.data.contents);
+        const postsLinks = watchedState.posts.map((post) => post.link);
+
+        const newPosts = posts.filter((post) => !postsLinks.includes(post.link));
+        const idNewPost = _.uniqueId();
+        const newPost = addId(newPosts, idNewPost);
+        watchedState.posts.unshift(...newPost);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
+  return Promise.all(feedUrl).then(setTimeout(() => getUpdates(watchedState), 5000));
 };
-
+debugger
 export default () => {
   const initState = {
     statusProcess: 'filling',
@@ -73,6 +76,7 @@ export default () => {
       modalId: null,
     },
   };
+  debugger
 
   const elements = {
     form: document.querySelector('form'),
@@ -112,7 +116,7 @@ export default () => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const currentUrl = formData.get('url').trim();
-        const beforeUrl = initState.urls.map((url) => url);
+        const beforeUrl = initState.feeds.map((url) => url);
         validate(currentUrl, beforeUrl)
           .then((error) => {
             if (error) {

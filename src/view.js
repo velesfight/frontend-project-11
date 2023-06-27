@@ -125,7 +125,7 @@ export default (initState, elements, i18n) => (path, value) => {
     modalLink.setAttribute('href', link);
   };
 
-  const loading = () => {
+  const getLoad = () => {
     switch (value) {
       case 'filing':
         submit.disabled = false;
@@ -158,7 +158,7 @@ export default (initState, elements, i18n) => (path, value) => {
       break;
     case 'modal': makeModal(initState, i18n);
       break;
-    case 'loading': loading(initState, elements, i18n);
+    case 'loading': getLoad(initState, elements, i18n);
       break;
     default:
       break;
