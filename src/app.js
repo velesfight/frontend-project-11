@@ -60,7 +60,7 @@ const getUpdates = (watchedState) => {
   });
   return Promise.all(feedUrl).then(setTimeout(() => getUpdates(watchedState), 5000));
 };
-debugger
+
 export default () => {
   const initState = {
     statusProcess: 'filling',
@@ -76,7 +76,6 @@ export default () => {
       modalId: null,
     },
   };
-  debugger
 
   const elements = {
     form: document.querySelector('form'),
@@ -93,7 +92,6 @@ export default () => {
   };
 
   const defaultLang = 'ru';
-
   const i18n = i18next.createInstance();
   i18n.init({
     debug: false,
@@ -121,12 +119,27 @@ export default () => {
           .then((error) => {
             if (error) {
               watchedState.isValid = 'false';
-              watchedState.statusProcess = 'filling';
-              watchedState.errors = error;// есть ошибка и надо ее записать в стейт
+              watchedState.statusProcess = 'failed';
+              switch (error) {
+                case 'invalidUrl':
+                  watchedState.errors = 'Ссылка должна быть валидным URL';
+                  break;
+                case 'rssAlreadyExists':
+                  watchedState.errors = 'RSS уже существует';
+                  break;
+                case 'notContainRss':
+                  watchedState.errors = 'Ресурс не содержит валидный RSS';
+                  break;
+                case 'netWorkError':
+                  watchedState.errors = 'Ошибка сети';
+                  break;
+                default:
+                  watchedState.errors = 'Неизвестная ошибка';
+              }
             } else {
               loadUrl(currentUrl);
               watchedState.isValid = 'true';
-              watchedState.statusProcess = 'sending';
+              watchedState.statusProcess = 'filling';
               watchedState.errors = null;
               watchedState.form.urls.push(currentUrl);
             }
