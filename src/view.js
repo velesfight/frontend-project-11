@@ -1,4 +1,4 @@
-export default (initState, elements, i18n) => (path, value) => {
+export default (elements, initState, i18n) => (path, value) => {
   const {
     form,
     input,
@@ -150,17 +150,33 @@ export default (initState, elements, i18n) => (path, value) => {
   };
 
   switch (path) {
-    case 'form': renderForm(initState, elements, i18n);
+    case 'form': renderForm(elements, initState, i18n);
       break;
-    case 'post': makeContainerPosts(initState, elements, i18n);
+    case 'post': makeContainerPosts(elements, initState, i18n);
       break;
-    case 'feed': makeContainerFeeds(initState, elements, i18n);
+    case 'feed': makeContainerFeeds(elements, initState, i18n);
       break;
     case 'modal': makeModal(initState, i18n);
       break;
-    case 'loading': getLoad(initState, elements, i18n);
+    case 'loading': getLoad(elements, initState, i18n);
       break;
     default:
       break;
   }
 };
+//switch (error) {
+  //case 'invalidUrl':
+  //  watchedState.errors = 'Ссылка должна быть валидным URL';
+  //  break;
+  //case 'rssAlreadyExists':
+  //  watchedState.errors = 'RSS уже существует';
+  //  break;
+  //case 'notContainRss':
+   // watchedState.errors = 'Ресурс не содержит валидный RSS';
+   // break;
+  //case 'netWorkError':
+   // watchedState.errors = 'Ошибка сети';
+   // break;
+  //default:
+  ///  watchedState.errors = 'Неизвестная ошибка';
+//}

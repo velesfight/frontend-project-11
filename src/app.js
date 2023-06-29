@@ -108,44 +108,26 @@ export default () => {
           url: 'invalidUrl',
         },
       });
-      const watchedState = onChange(initState, render(initState, elements, i18n));
-
+      const watchedState = onChange(initState, render(elements, initState, i18n));
+debugger
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        const currentUrl = formData.get('url').trim();
-        const beforeUrl = initState.feeds.map((url) => url);
-        validate(currentUrl, beforeUrl)
+        const urlForm = formData.get('url').trim();
+        const urls = initState.feeds.map(({ url }) => url);
+        validate(urlForm, urls)
           .then((error) => {
             if (error) {
-              watchedState.isValid = 'false';
-              watchedState.statusProcess = 'failed';
-              switch (error) {
-                case 'invalidUrl':
-                  watchedState.errors = 'Ссылка должна быть валидным URL';
-                  break;
-                case 'rssAlreadyExists':
-                  watchedState.errors = 'RSS уже существует';
-                  break;
-                case 'notContainRss':
-                  watchedState.errors = 'Ресурс не содержит валидный RSS';
-                  break;
-                case 'netWorkError':
-                  watchedState.errors = 'Ошибка сети';
-                  break;
-                default:
-                  watchedState.errors = 'Неизвестная ошибка';
-              }
+              watchedState.form.isValid = 'false';
+              watchedState.errors = error.message;
             } else {
-              loadUrl(currentUrl);
-              watchedState.isValid = 'true';
-              watchedState.statusProcess = 'filling';
+              watchedState.form.isValid = 'true';
               watchedState.errors = null;
-              watchedState.form.urls.push(currentUrl);
+              loadUrl(urlForm, watchedState);
             }
           });
       });
-
+debugger
       elements.postsCard.addEventListener('click', (e) => {
         const { id } = e.target.dataset;
         if (!id) {
