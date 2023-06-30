@@ -15,6 +15,8 @@ export default (elements, initState, i18n) => (path, value) => {
   const renderForm = () => {
     if (initState.form.isValid === 'true') {
       input.classList.remove('is-invalid');
+      feedback.classList.remove('text-danger');
+      feedback.classList.add('text-success');
       feedback.textContent = i18n.t('message.rssLoaded'); // ?
       form.reset();
       input.focus();
@@ -52,9 +54,9 @@ export default (elements, initState, i18n) => (path, value) => {
       description.classList.add('m-0', 'small', 'text-black-50');
       description.textContent = feed.description;// практические уроки
 
-      feedsContainer.replaceChildren(div, ul, li, title, description);
+      feedsContainer.appendChild(div, ul, li, title, description);
     });
-    feedsCard.append(feedsContainer);
+    feedsCard.appendChild(feedsContainer);
   };
 
   const makeContainerPosts = (posts, readPost) => {
@@ -148,21 +150,24 @@ export default (elements, initState, i18n) => (path, value) => {
         break;
     }
   };
-
+  debugger
   switch (path) {
     case 'form': renderForm(elements, initState, i18n);
       break;
-    case 'post': makeContainerPosts(elements, initState, i18n);
+    case 'posts': makeContainerPosts(elements, initState, i18n);
       break;
-    case 'feed': makeContainerFeeds(elements, initState, i18n);
+    case 'feeds': makeContainerFeeds(elements, initState, i18n);
       break;
-    case 'modal': makeModal(initState, i18n);
+    case 'uiState.modalId': makeModal(initState, i18n);
       break;
-    case 'loading': getLoad(elements, initState, i18n);
+    case 'loadingProcess': getLoad(elements, initState, i18n);
+      break;
+    case 'uiState.readPost': makeContainerPosts(elements, initState, i18n);
       break;
     default:
       break;
   }
+  debugger
 };
 //switch (error) {
   //case 'invalidUrl':

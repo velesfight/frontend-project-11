@@ -20,18 +20,24 @@ const addId = (posts, feedId) => posts.map((post) => ({
   id: feedId,
 }));
 
-const loadUrl = (url, watchedState) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`)
-  .then((response) => {
-    const { feed, post } = parser(response.data.contents);
-    const idFeed = _.uniqueId();
-    feed.id = idFeed;
-    const postWithId = addId(post, idFeed);
-    watchedState.feeds.push(feed);
-    watchedState.posts.push(...postWithId);
-  })
-  .catch((error) => {
-    watchedState.errors = error.message;// eslint-disable-line
-  });
+const loadUrl = (url, watchedState) => {
+  watchedState.loadingProcess = { status: 'loading', error: null };
+
+  const request = axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`);
+  return request
+    .then((response) => {
+      const { feed, post } = parser(response.data.contents);
+      const idFeed = _.uniqueId();
+      feed.id = idFeed;
+      const postWithId = addId(post, idFeed);
+      watchedState.loadingProcess = { status: 'finished', error: null };
+      watchedState.feeds.push(feed);
+      watchedState.posts.push(...postWithId);
+    })
+    .catch((error) => {
+    watchedState.loadingProcess = { status: 'failed', error: error };// eslint-disable-line
+    });
+};
 
 const parseUrl = (url) => {
   const copyUrl = new URL('https://allorigins.hexlet.app/get');
@@ -63,14 +69,17 @@ const getUpdates = (watchedState) => {
 
 export default () => {
   const initState = {
-    statusProcess: 'filling',
     form: {
-      isValid: null,
+      isValid: false,
       urls: [],
+      error: null,
+    },
+    loadingProcess: {
+      status: 'filling',
+      error: null,
     },
     posts: [],
     feeds: [],
-    errors: null,
     uiState: {
       readPost: new Set(),
       modalId: null,
@@ -109,7 +118,7 @@ export default () => {
         },
       });
       const watchedState = onChange(initState, render(elements, initState, i18n));
-debugger
+
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -118,16 +127,14 @@ debugger
         validate(urlForm, urls)
           .then((error) => {
             if (error) {
-              watchedState.form.isValid = 'false';
-              watchedState.errors = error.message;
+              watchedState.form = { isValid: 'false', error: error.message };
             } else {
-              watchedState.form.isValid = 'true';
-              watchedState.errors = null;
+              watchedState.form = { isValid: 'true', error: null };
               loadUrl(urlForm, watchedState);
             }
           });
       });
-debugger
+
       elements.postsCard.addEventListener('click', (e) => {
         const { id } = e.target.dataset;
         if (!id) {
