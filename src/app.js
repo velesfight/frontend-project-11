@@ -20,30 +20,39 @@ const addId = (posts, feedId) => posts.map((post) => ({
   id: feedId,
 }));
 
-const loadUrl = (url, watchedState) => {
-  watchedState.loadingProcess = { status: 'loading', error: null };
+const parseUrl = (url) => {
+  const copyUrl = new URL('https://allorigins.hexlet.app/get');
+  copyUrl.searchParams.set('url', url);
+  copyUrl.searchParams.set('disableCache', true);
+  return copyUrl.toString();
+};
 
-  const request = axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${url}`)}`);
+const getError = (error) => {
+  if (error.isParserError) {
+    return 'notContainRss';
+  }
+  if (error.isAxiosError && error.code === 'ERR_NETWORK') {
+    return 'netWorkError';
+  }
+  return 'unknownError';
+};
+
+const loadUrl = (url, watchedState) => {
+  watchedState.loadingProcess = { status: 'loading', error: null };// eslint-disable-line
+
+  const request = axios.get(parseUrl(url));
   return request
     .then((response) => {
       const { feed, post } = parser(response.data.contents);
       const idFeed = _.uniqueId();
       feed.id = idFeed;
       const postWithId = addId(post, idFeed);
-      watchedState.loadingProcess = { status: 'finished', error: null };
-      watchedState.feeds.push(feed);
+      watchedState.loadingProcess = { status: 'finished', error: null };// eslint-disable-line
       watchedState.posts.push(...postWithId);
     })
     .catch((error) => {
-    watchedState.loadingProcess = { status: 'failed', error: error };// eslint-disable-line
+      watchedState.loadingProcess = { status: 'failed', error: getError(error) };// eslint-disable-line
     });
-};
-
-const parseUrl = (url) => {
-  const copyUrl = new URL('https://allorigins.hexlet.app/get');
-  copyUrl.searchParams.set('url', url);
-  copyUrl.searchParams.set('disableCache', true);
-  return copyUrl.toString();
 };
 
 const getUpdates = (watchedState) => {
@@ -60,8 +69,8 @@ const getUpdates = (watchedState) => {
         const newPost = addId(newPosts, idNewPost);
         watchedState.posts.unshift(...newPost);
       })
-      .catch((err) => {
-        console.error(err);
+      .catch((error) => {
+        console.error(error);
       });
   });
   return Promise.all(feedUrl).then(setTimeout(() => getUpdates(watchedState), 5000));
@@ -121,6 +130,7 @@ export default () => {
 
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
+        watchedState.loadingProcess.status = 'sending';
         const formData = new FormData(e.target);
         const urlForm = formData.get('url').trim();
         const urls = initState.feeds.map(({ url }) => url);
@@ -141,7 +151,6 @@ export default () => {
           return;
         }
         watchedState.uiState.modalId = id;
-        console.log(id);
         watchedState.readPost.add(id);
       });
       getUpdates(watchedState);
