@@ -31,7 +31,7 @@ const getError = (error) => {
   if (error.isParserError) {
     return 'notContainRss';
   }
-  if (error.isAxiosError && error.code === 'ERR_NETWORK') {
+  if (error.isAxiosError) {
     return 'netWorkError';
   }
   return 'unknownError';
@@ -138,6 +138,7 @@ export default () => {
           .then((error) => {
             if (error) {
               watchedState.form = { isValid: 'false', error: error.message };
+              console.log(error.message);
             } else {
               watchedState.form = { isValid: 'true', error: null };
               loadUrl(urlForm, watchedState);

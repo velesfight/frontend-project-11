@@ -98,8 +98,8 @@ const makeContainerPosts = ({ postsCard }, { posts }, { readPost }, i18n) => {
   cardContainer.replaceChildren(ul);
   postsCard.appendChild(cardContainer);
 };
-debugger
-const getLoad = ({ input, feedback }, { status, error }, i18n) => {
+
+const getLoad = ({ input, feedback, form }, { status, error }, i18n) => {
   switch (status) {
     case 'loading':
       feedback.textContent = i18n.t('message.notEmpty');// eslint-disable-line
@@ -108,6 +108,7 @@ const getLoad = ({ input, feedback }, { status, error }, i18n) => {
       feedback.classList.add('text-success');
       feedback.textContent = i18n.t('message.rssLoaded');// eslint-disable-line
       input.focus();
+      form.reset();
       break;
     case 'failed':
       feedback.classList.add('text-danger');
@@ -117,7 +118,7 @@ const getLoad = ({ input, feedback }, { status, error }, i18n) => {
       break;
   }
 };
-debugger
+
 const makeModal = (elements, { posts }, { modalId }) => {
   const {
     modal,
@@ -135,7 +136,6 @@ const makeModal = (elements, { posts }, { modalId }) => {
   modalLink.setAttribute('href', link);
 };
 
-debugger
 const render = (elements, initState, i18n) => (path, value) => {
   switch (path) {
     case 'form': renderForm(elements, value, i18n);

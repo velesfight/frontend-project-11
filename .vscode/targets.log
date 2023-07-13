@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Tue Jun  6 12:17:49 2023
+# Make data base, printed on Thu Jul 13 19:21:10 2023
 
 # Variables
 
@@ -22,7 +22,6 @@ make: *** No rule to make target `all'.  Stop.
 VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
- 
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # automatic
@@ -44,7 +43,7 @@ __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 INFOPATH = /opt/homebrew/share/info:
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/1d/mktswl8j6ld103dgpsv13qkr0000gn/T/vscode-ipc-1c57f13a-8d87-4f27-9a56-bb151a807329.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/1d/mktswl8j6ld103dgpsv13qkr0000gn/T/vscode-ipc-02cce707-1a06-4724-9b6f-b91a8d9da2d4.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -189,7 +188,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2023-05-25 15:03:57
+#  Last modified 2023-05-25 13:03:57
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -253,9 +252,8 @@ install:
 # # of strings in strcache: 1
 # # of strcache buffers: 1
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
- 
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Tue Jun  6 12:17:49 2023
+# Finished Make data base on Thu Jul 13 19:21:10 2023
 
  
