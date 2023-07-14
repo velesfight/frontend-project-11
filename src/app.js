@@ -101,12 +101,12 @@ export default () => {
     feedback: document.querySelector('.feedback'),
     postsCard: document.querySelector('.posts'),
     feedsCard: document.querySelector('.feeds'),
-    submit: document.querySelector('.submit'),
+    submit: document.querySelector('[type="submit"]'),
     modal: document.querySelector('.modal'),
 
     modalTitle: document.querySelector('.modal-title'),
     modalBody: document.querySelector('.modal-body'),
-    modalLink: document.querySelector('.modal-link'),
+    modalLink: document.querySelector('.modal-footer a'),
   };
 
   const defaultLang = 'ru';
@@ -138,7 +138,6 @@ export default () => {
           .then((error) => {
             if (error) {
               watchedState.form = { isValid: 'false', error: error.message };
-              console.log(error.message);
             } else {
               watchedState.form = { isValid: 'true', error: null };
               loadUrl(urlForm, watchedState);

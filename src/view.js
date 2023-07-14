@@ -7,7 +7,7 @@ const renderForm = ({ input, feedback }, { isValid, error }, i18n) => {
     input.classList.add('is-invalid');
     feedback.classList.remove('text-success');
     feedback.classList.add('text-danger');
-    feedback.textContent = i18n.t(`errors${error}`);// eslint-disable-line
+    feedback.textContent = i18n.t(`message.${error}`);// eslint-disable-line
   }
 };
 
@@ -99,26 +99,26 @@ const makeContainerPosts = ({ postsCard }, { posts }, { readPost }, i18n) => {
   postsCard.appendChild(cardContainer);
 };
 
-const getLoad = ({ input, feedback, form }, { status, error }, i18n) => {
+const getLoad = ({ input, feedback, submit }, { status, error }, i18n) => {
   switch (status) {
     case 'loading':
-      feedback.textContent = i18n.t('message.notEmpty');// eslint-disable-line
+      submit.setAttribute('disabled', 'disabled');
       break;
     case 'finished':
+      submit.removeAttribute('disabled');
       feedback.classList.add('text-success');
       feedback.textContent = i18n.t('message.rssLoaded');// eslint-disable-line
       input.focus();
-      form.reset();
       break;
     case 'failed':
+      submit.removeAttribute('disabled');
       feedback.classList.add('text-danger');
-      feedback.textContent = i18n.t(`errors.${error}`);// eslint-disable-line
+      feedback.textContent = i18n.t(`message.${error}`);// eslint-disable-line
       break;
     default:
       break;
   }
 };
-
 const makeModal = (elements, { posts }, { modalId }) => {
   const {
     modal,
