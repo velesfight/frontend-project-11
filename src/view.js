@@ -1,13 +1,16 @@
 const renderForm = ({ input, feedback }, { isValid, error }, i18n) => {
-  if (isValid === 'true') {
+  if (isValid) {
     input.classList.remove('is-invalid');
     feedback.classList.remove('text-danger');
     feedback.classList.add('text-success');
+    // eslint-disable-next-line no-param-reassign
+    feedback.textContent = '';
   } else {
     input.classList.add('is-invalid');
     feedback.classList.remove('text-success');
     feedback.classList.add('text-danger');
-    feedback.textContent = i18n.t(`message.${error}`);// eslint-disable-line
+    // eslint-disable-next-line no-param-reassign
+    feedback.textContent = i18n.t(`message.${error}`);
   }
 };
 
@@ -99,26 +102,33 @@ const makeContainerPosts = ({ postsCard }, { posts }, { readPost }, i18n) => {
   postsCard.appendChild(cardContainer);
 };
 
-const getLoad = ({ input, feedback, submit }, { status, error }, i18n) => {
+const hendler = ({ input, feedback, submit }, { status, error }, i18n) => {
   switch (status) {
     case 'loading':
-      submit.setAttribute('disabled', 'disabled');
+      submit.setAttribute('disabled', 'disabled');// =>разблокировать инпут только для чтение
       break;
-    case 'finished':
+    case 'success':
+      // eslint-disable-next-line no-param-reassign
+      input.readOnly = true;
       submit.removeAttribute('disabled');
       feedback.classList.add('text-success');
-      feedback.textContent = i18n.t('message.rssLoaded');// eslint-disable-line
+      submit.removeAttribute('disabled');
+      // eslint-disable-next-line no-param-reassign
+      feedback.textContent = i18n.t('message.rssLoaded');
       input.focus();
       break;
     case 'failed':
       submit.removeAttribute('disabled');
       feedback.classList.add('text-danger');
-      feedback.textContent = i18n.t(`message.${error}`);// eslint-disable-line
+      submit.removeAttribute('disabled');
+      // eslint-disable-next-line no-param-reassign
+      feedback.textContent = i18n.t(`message.${error}`);
       break;
     default:
       break;
   }
 };
+
 const makeModal = (elements, { posts }, { modalId }) => {
   const {
     modal,
@@ -137,10 +147,11 @@ const makeModal = (elements, { posts }, { modalId }) => {
 };
 
 const render = (elements, initState, i18n) => (path, value) => {
+  debugger
   switch (path) {
     case 'form': renderForm(elements, value, i18n);
       break;
-    case 'loadingProcess': getLoad(elements, value, i18n);
+    case 'loadingProcess': hendler(elements, value, i18n);
       break;
     case 'posts': makeContainerPosts(elements, initState, i18n);
       break;

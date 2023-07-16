@@ -14,8 +14,7 @@ export default (contents) => {
     description: descriptionFeed,
   };
 
-  const items = Array.from(doc.querySelectorAll('item'));
-  const post = items.map((item) => {
+  const posts = Array.from(doc.querySelectorAll('item')).map((item) => {
     const titlePost = item.querySelector('title').textContent;
     const urlPost = item.querySelector('link').textContent;
     const descriptionPost = item.querySelector('description').textContent;
@@ -25,5 +24,5 @@ export default (contents) => {
       link: urlPost,
     };
   });
-  return { feed, post };
+  return { feed, posts };
 };

@@ -16,8 +16,8 @@ const validate = (url, urls) => {
 
 const addId = (posts, feedId) => posts.map((post) => ({
   ...post,
-  feedId: _.uniqueId(),
-  id: feedId,
+  feedId,
+  id: _.uniqueId(),
 }));
 
 const parseUrl = (url) => {
@@ -38,20 +38,25 @@ const getError = (error) => {
 };
 
 const loadUrl = (url, watchedState) => {
-  watchedState.loadingProcess = { status: 'loading', error: null };// eslint-disable-line
+  // eslint-disable-next-line no-param-reassign
+  watchedState.loadingProcess = { status: 'loading', error: null };
 
-  const request = axios.get(parseUrl(url));
-  return request
-    .then((response) => {
-      const { feed, post } = parser(response.data.contents);
-      const idFeed = _.uniqueId();
-      feed.id = idFeed;
-      const postWithId = addId(post, idFeed);
-      watchedState.loadingProcess = { status: 'finished', error: null };// eslint-disable-line
-      watchedState.posts.push(...postWithId);
+  return axios
+    .get(parseUrl(url))
+    .then((response) => response.data.contents)
+    .then((contents) => {
+      const { feed, posts } = parser(contents);
+      feed.id = _.uniqueId();
+      const postWithId = addId(posts, feed.id);
+      // eslint-disable-next-line no-param-reassign
+      watchedState.loadingProcess = { status: 'success', error: null };
+      watchedState.posts.inshift(...postWithId);
+      watchedState.feeds.push(feed);
     })
     .catch((error) => {
-      watchedState.loadingProcess = { status: 'failed', error: getError(error) };// eslint-disable-line
+      console.log(error);
+      // eslint-disable-next-line no-param-reassign
+      watchedState.loadingProcess = { status: 'failed', error: getError(error) };
     });
 };
 
@@ -130,16 +135,15 @@ export default () => {
 
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
-        watchedState.loadingProcess.status = 'sending';
         const formData = new FormData(e.target);
         const urlForm = formData.get('url').trim();
-        const urls = initState.feeds.map(({ url }) => url);
+        const urls = watchedState.feeds.map(({ url }) => url);
         validate(urlForm, urls)
           .then((error) => {
             if (error) {
-              watchedState.form = { isValid: 'false', error: error.message };
+              watchedState.form = { isValid: false, error };
             } else {
-              watchedState.form = { isValid: 'true', error: null };
+              watchedState.form = { isValid: true, error: null };
               loadUrl(urlForm, watchedState);
             }
           });
@@ -151,7 +155,7 @@ export default () => {
           return;
         }
         watchedState.uiState.modalId = id;
-        watchedState.readPost.add(id);
+        watchedState.uiState.readPost.add(id);
       });
       getUpdates(watchedState);
     });
