@@ -1,3 +1,4 @@
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 export default {
@@ -7,6 +8,7 @@ export default {
     clean: true,
   },
   plugins: [
+    new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
       template: 'index.html',
     }),
@@ -22,7 +24,7 @@ export default {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: MiniCssExtractPlugin.loader,
           options: {
             presets: ['@babel/preset-env'],
           },
