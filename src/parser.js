@@ -1,28 +1,23 @@
 export default (contents) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(contents, 'text/xml');
-  const errorNode = doc.querySelector('parsererror');
-  if (errorNode) {
-    const error = new Error(errorNode.textContent);
-    error.isParseError = true;
+  const parserError = doc.querySelector('parsererror');
+  if (parserError) {
+    const error = new Error(parserError.textContent);
+    error.isParserError = true;
     throw error;
   }
-  const titleFeed = doc.querySelector('title').textContent;
-  const descriptionFeed = doc.querySelector('description').textContent;
+
   const feed = {
-    title: titleFeed,
-    description: descriptionFeed,
+    title: doc.querySelector('title').textContent,
+    description: doc.querySelector('description').textContent,
   };
 
   const posts = Array.from(doc.querySelectorAll('item')).map((item) => {
-    const titlePost = item.querySelector('title').textContent;
-    const urlPost = item.querySelector('link').textContent;
-    const descriptionPost = item.querySelector('description').textContent;
-    return {
-      title: titlePost,
-      description: descriptionPost,
-      link: urlPost,
-    };
+    const title = item.querySelector('title').textContent;
+    const link = item.querySelector('link').textContent;
+    const description = item.querySelector('description').textContent;
+    return { title, link, description };
   });
   return { feed, posts };
 };

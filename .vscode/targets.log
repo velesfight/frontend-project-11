@@ -10,12 +10,13 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Thu Jul 13 19:21:10 2023
+# Make data base, printed on Wed Jul 19 11:17:02 2023
 
 # Variables
 
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
+ 
 # automatic
 ?F = $(notdir $?)
 # environment
@@ -43,11 +44,11 @@ __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 INFOPATH = /opt/homebrew/share/info:
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/1d/mktswl8j6ld103dgpsv13qkr0000gn/T/vscode-ipc-02cce707-1a06-4724-9b6f-b91a8d9da2d4.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/1d/mktswl8j6ld103dgpsv13qkr0000gn/T/vscode-ipc-ca1dba3f-bad1-4fe6-b133-7bfa261e4f42.sock
 # environment
 VSCODE_CWD = /
 # environment
-PATH = /opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin
+PATH = /opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin
 # environment
 VSCODE_LOG_STACK = false
 # environment
@@ -55,7 +56,7 @@ ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.gDNJDNGYkH/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.6cwsZ6poye/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -145,17 +146,18 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 9954
+VSCODE_PID = 20588
 # variable set hash-table stats:
 # Load=66/1024=6%, Rehash=0, Collisions=1/89=1%
 
 # Pattern-specific Variable Values
+ 
 
 # No pattern-specific variable values.
 
 # Directories
 
-# . (device 16777234, inode 9854574): 19 files, no impossibilities.
+# . (device 16777232, inode 9854574): 19 files, no impossibilities.
 
 # 19 files, no impossibilities in 1 directories.
 
@@ -188,7 +190,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2023-05-25 13:03:57
+#  Last modified 2023-05-25 08:03:57
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -254,6 +256,6 @@ install:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Thu Jul 13 19:21:10 2023
+# Finished Make data base on Wed Jul 19 11:17:02 2023
 
  

@@ -23,17 +23,23 @@ export default {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: MiniCssExtractPlugin.loader,
-          options: {
-            presets: ['@babel/preset-env'],
-          },
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env'],
         },
       },
-      { test: /\.css$/, use: ['style-loader', 'css-loader', 'postcss-loader'] },
+      {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+      },
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader', 'postcss-loader'],
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader',
+          'postcss-loader',
+        ],
       },
     ],
   },

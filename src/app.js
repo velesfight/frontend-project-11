@@ -46,17 +46,18 @@ const loadUrl = (url, watchedState) => {
     .then((response) => response.data.contents)
     .then((contents) => {
       const { feed, posts } = parser(contents);
+      feed.url = url;
       feed.id = _.uniqueId();
       const postWithId = addId(posts, feed.id);
       // eslint-disable-next-line no-param-reassign
       watchedState.loadingProcess = { status: 'success', error: null };
-      watchedState.posts.inshift(...postWithId);
-      watchedState.feeds.push(feed);
+      watchedState.posts.unshift(...postWithId);
+      watchedState.feeds.unshift(feed);
     })
     .catch((error) => {
       console.log(error);
       // eslint-disable-next-line no-param-reassign
-      watchedState.loadingProcess = { status: 'failed', error: getError(error) };
+     // watchedState.loadingProcess = { status: 'failed', error: getError(error) };
     });
 };
 

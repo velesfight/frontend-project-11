@@ -54,7 +54,8 @@ const makeContainerPosts = ({ postsCard }, { posts }, { readPost }, i18n) => {
 
   const cardTitle = document.createElement('h2');
   cardTitle.classList.add('card-title', 'h4');
-  cardTitle.textContent = i18n.t('cards.posts'); // "Посты"
+  cardTitle.textContent = i18n.t('cards.posts'); // посты
+  console.log(cardTitle.textContent);
 
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
@@ -146,20 +147,20 @@ const makeModal = (elements, { posts }, { modalId }) => {
   modalLink.setAttribute('href', link);
 };
 
-const render = (elements, initState, i18n) => (path, value) => {
+const render = (elements, state, i18n) => (path, value) => {
   debugger
   switch (path) {
     case 'form': renderForm(elements, value, i18n);
       break;
     case 'loadingProcess': hendler(elements, value, i18n);
       break;
-    case 'posts': makeContainerPosts(elements, initState, i18n);
+    case 'posts': makeContainerPosts(elements, state, i18n);
       break;
-    case 'feeds': makeContainerFeeds(elements, initState, i18n);
+    case 'feeds': makeContainerFeeds(elements, state, i18n);
       break;
-    case 'uiState.readPost': makeContainerPosts(elements, initState, i18n);
+    case 'uiState.readPost': makeContainerPosts(elements, state, i18n);
       break;
-    case 'uiState.modalId': makeModal(initState, i18n);
+    case 'uiState.modalId': makeModal(state, i18n);
       break;
     default:
       break;
