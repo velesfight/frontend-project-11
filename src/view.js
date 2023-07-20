@@ -22,7 +22,7 @@ const makeContainerFeeds = ({ feedsCard }, { feeds }, i18n) => {
   div.classList.add('card-body');
   const h2 = document.createElement('h2');
   h2.classList.add('card-title', 'h4');
-  h2.textContent = `${i18n.t('cards.feed')}`; // "Фиды"
+  h2.textContent = i18n.t('cards.feed'); // "Фиды"
   div.appendChild(h2);
 
   const ul = document.createElement('ul');
