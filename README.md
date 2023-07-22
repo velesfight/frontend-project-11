@@ -14,15 +14,21 @@ node.js 16.0+
 
 Install the dependencies:
 
+```
 make install
+```
 
 build the webpack:
 
+```
 make build
+```
 
 run the webpack on localhost
 
+```
 make develop
+```
 
 ## Demo:
 
