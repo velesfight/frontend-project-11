@@ -20,7 +20,7 @@ const addId = (posts, feedId) => posts.map((post) => ({
   id: _.uniqueId(),
 }));
 
-const parseUrl = (url) => {
+const parsedUrl = (url) => {
   const copyUrl = new URL('https://allorigins.hexlet.app/get');
   copyUrl.searchParams.set('url', url);
   copyUrl.searchParams.set('disableCache', true);
@@ -42,7 +42,7 @@ const loadUrl = (url, watchedState) => {
   watchedState.loadingProcess = { status: 'loading', error: null };
 
   return axios
-    .get(parseUrl(url))
+    .get(parsedUrl(url))
     .then((response) => response.data.contents)
     .then((contents) => {
       const { feed, posts } = parser(contents);
@@ -57,13 +57,13 @@ const loadUrl = (url, watchedState) => {
     .catch((error) => {
       console.log(error);
       // eslint-disable-next-line no-param-reassign
-     // watchedState.loadingProcess = { status: 'failed', error: getError(error) };
+      watchedState.loadingProcess = { status: 'failed', error: getError(error) };
     });
 };
 
 const getUpdates = (watchedState) => {
   const feedUrl = watchedState.feeds.map(({ url }) => {
-    const request = axios.get(parseUrl(url));
+    const request = axios.get(parsedUrl(url));
 
     return request
       .then((response) => {
@@ -95,8 +95,8 @@ export default () => {
     },
     posts: [],
     feeds: [],
-    uiState: {
-      readPost: new Set(),
+    seenPosts: new Set(),
+    ui: {
       modalId: null,
     },
   };
@@ -155,8 +155,8 @@ export default () => {
         if (!id) {
           return;
         }
-        watchedState.uiState.modalId = id;
-        watchedState.uiState.readPost.add(id);
+        watchedState.ui.modalId = id;
+        watchedState.seenPosts.add(id);
       });
       getUpdates(watchedState);
     });

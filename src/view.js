@@ -22,7 +22,7 @@ const makeContainerFeeds = ({ feedsCard }, { feeds }, i18n) => {
   div.classList.add('card-body');
   const h2 = document.createElement('h2');
   h2.classList.add('card-title', 'h4');
-  h2.textContent = i18n.t('cards.feed'); // "Фиды"
+  h2.textContent = i18n.t('cards.feeds'); // "Фиды"
   div.appendChild(h2);
 
   const ul = document.createElement('ul');
@@ -40,12 +40,12 @@ const makeContainerFeeds = ({ feedsCard }, { feeds }, i18n) => {
     description.classList.add('m-0', 'small', 'text-black-50');
     description.textContent = feed.description;// практические уроки
 
-    feedsContainer.appendChild(div, ul, li, title, description);
+    feedsContainer.replaceChildren(div, ul, li, title, description);
   });
   feedsCard.appendChild(feedsContainer);
 };
 
-const makeContainerPosts = ({ postsCard }, { posts }, { readPost }, i18n) => {
+const makeContainerPosts = ({ postsCard }, { posts, seenPosts }, i18n) => {
   const cardContainer = document.createElement('div');
   cardContainer.classList.add('card', 'border-0');
 
@@ -54,7 +54,7 @@ const makeContainerPosts = ({ postsCard }, { posts }, { readPost }, i18n) => {
 
   const cardTitle = document.createElement('h2');
   cardTitle.classList.add('card-title', 'h4');
-  cardTitle.textContent = i18n.t('cards.posts'); // посты
+  cardTitle.textContent = i18n.t('cards.posts');
   console.log(cardTitle.textContent);
 
   const ul = document.createElement('ul');
@@ -90,7 +90,7 @@ const makeContainerPosts = ({ postsCard }, { posts }, { readPost }, i18n) => {
     a.setAttribute('rel', 'noopener noreferrer');
     a.textContent = post.title;
 
-    if (readPost.has(post.id)) {
+    if (seenPosts.has(post.id)) {
       a.classList.add('fw-normal', 'link-secondary');
     } else {
       a.classList.add('fw-bold');
@@ -103,19 +103,25 @@ const makeContainerPosts = ({ postsCard }, { posts }, { readPost }, i18n) => {
   postsCard.appendChild(cardContainer);
 };
 
-const hendler = ({ input, feedback, submit }, { status, error }, i18n) => {
+const hendler = ({
+  form, input, feedback, submit,
+}, { status, error }, i18n) => {
   switch (status) {
     case 'loading':
       submit.setAttribute('disabled', 'disabled');// =>разблокировать инпут только для чтение
+      // eslint-disable-next-line no-param-reassign
+      input.readOnly = true;
       break;
     case 'success':
       // eslint-disable-next-line no-param-reassign
-      input.readOnly = true;
       submit.removeAttribute('disabled');
       feedback.classList.add('text-success');
       submit.removeAttribute('disabled');
       // eslint-disable-next-line no-param-reassign
+      input.readOnly = false;
+      // eslint-disable-next-line no-param-reassign
       feedback.textContent = i18n.t('message.rssLoaded');
+      form.reset();
       input.focus();
       break;
     case 'failed':
@@ -130,17 +136,18 @@ const hendler = ({ input, feedback, submit }, { status, error }, i18n) => {
   }
 };
 
-const makeModal = (elements, { posts }, { modalId }) => {
+const makeModal = (elements, { posts, ui }) => {
   const {
     modal,
     modalTitle,
     modalBody,
     modalLink,
   } = elements;
-  const readPost = posts.find(({ id }) => id === modalId);
+  const { modalId } = ui;
+  const post = posts.find(({ id }) => id === modalId);
   const {
     id, title, description, link,
-  } = readPost;
+  } = post;
   modal.setAttribute('data-id', id);
   modalTitle.textContent = title;
   modalBody.textContent = description;
@@ -148,7 +155,6 @@ const makeModal = (elements, { posts }, { modalId }) => {
 };
 
 const render = (elements, state, i18n) => (path, value) => {
-  debugger
   switch (path) {
     case 'form': renderForm(elements, value, i18n);
       break;
@@ -158,9 +164,9 @@ const render = (elements, state, i18n) => (path, value) => {
       break;
     case 'feeds': makeContainerFeeds(elements, state, i18n);
       break;
-    case 'uiState.readPost': makeContainerPosts(elements, state, i18n);
+    case 'seenPosts': makeContainerPosts(elements, state, i18n);
       break;
-    case 'uiState.modalId': makeModal(state, i18n);
+    case 'ui.modalId': makeModal(elements, state);
       break;
     default:
       break;

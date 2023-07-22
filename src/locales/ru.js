@@ -1,7 +1,7 @@
 export default {
   translation: {
     message: {
-      notEmpty: 'Заполните это поле',
+      notEmpty: 'Не должно быть пустым',
       invalidUrl: 'Ссылка должна быть валидным URL',
       rssAlreadyExists: 'RSS уже существует',
       notContainRss: 'Ресурс не содержит валидный RSS',
