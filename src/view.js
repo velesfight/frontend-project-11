@@ -22,7 +22,7 @@ const makeContainerFeeds = ({ feedsCard }, { feeds }, i18n) => {
   div.classList.add('card-body');
   const h2 = document.createElement('h2');
   h2.classList.add('card-title', 'h4');
-  h2.textContent = i18n.t('cards.feeds'); // "Фиды"
+  h2.textContent = i18n.t('cards.feeds');
   div.appendChild(h2);
 
   const ul = document.createElement('ul');
@@ -34,11 +34,11 @@ const makeContainerFeeds = ({ feedsCard }, { feeds }, i18n) => {
 
     const title = document.createElement('h3');
     title.classList.add('h6', 'm-0');
-    title.textContent = feed.title; // ?  новые уроки на хекслете
+    title.textContent = feed.title;
 
     const description = document.createElement('p');
     description.classList.add('m-0', 'small', 'text-black-50');
-    description.textContent = feed.description;// практические уроки
+    description.textContent = feed.description;
 
     feedsContainer.replaceChildren(div, ul, li, title, description);
   });
@@ -108,7 +108,7 @@ const hendler = ({
 }, { status, error }, i18n) => {
   switch (status) {
     case 'loading':
-      submit.setAttribute('disabled', 'disabled');// =>разблокировать инпут только для чтение
+      submit.setAttribute('disabled', 'disabled');
       // eslint-disable-next-line no-param-reassign
       input.readOnly = true;
       break;
