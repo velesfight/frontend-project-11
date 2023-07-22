@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Sat Jul 22 09:14:43 2023
+# Make data base, printed on Sat Jul 22 09:41:17 2023
 
 # Variables
 
@@ -43,10 +43,9 @@ __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 INFOPATH = /opt/homebrew/share/info:
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/1d/mktswl8j6ld103dgpsv13qkr0000gn/T/vscode-ipc-93ba2d43-c968-4ed0-84d9-d88dc37435f3.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/1d/mktswl8j6ld103dgpsv13qkr0000gn/T/vscode-ipc-40ae1184-52c3-4216-96e7-dd663577b83b.sock
 # environment
 VSCODE_CWD = /
- 
 # environment
 PATH = /opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin
 # environment
@@ -110,6 +109,7 @@ TMPDIR = /var/folders/1d/mktswl8j6ld103dgpsv13qkr0000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
+ 
 VSCODE_IPC_HOOK = /Users/ekaterina/Library/Application Support/Code/1.68.0-main.sock
 # makefile
 MAKEFLAGS = Rrqp
@@ -207,6 +207,7 @@ test:
 develop:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
+ 
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 2):
 	npx webpack serve
@@ -255,6 +256,6 @@ install:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sat Jul 22 09:14:43 2023
+# Finished Make data base on Sat Jul 22 09:41:17 2023
 
  
