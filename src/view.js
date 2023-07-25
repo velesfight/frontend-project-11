@@ -144,6 +144,7 @@ const makeModal = (elements, { posts, ui }) => {
     modalLink,
   } = elements;
   const { modalId } = ui;
+
   const post = posts.find(({ id }) => id === modalId);
   const {
     id, title, description, link,
