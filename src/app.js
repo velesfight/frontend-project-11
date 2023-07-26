@@ -62,17 +62,15 @@ const loadUrl = (url, watchedState) => {
 };
 
 const getUpdates = (watchedState) => {
-  const feedUrl = watchedState.feeds.map(({ url }) => {
+  const feedUrl = watchedState.feeds.map(({ id, url }) => {
     const request = axios.get(parsedUrl(url));
 
     return request
       .then((response) => {
         const { posts } = parser(response.data.contents);
         const postsLinks = watchedState.posts.map((post) => post.link);
-
-        const newPosts = posts.filter((post) => !postsLinks.includes(post.link));
-        const idNewPost = _.uniqueId();
-        const newPost = addId(newPosts, idNewPost);
+        const newPosts = posts.filter((p) => !postsLinks.includes(p.link));
+        const newPost = addId(newPosts, id);
         watchedState.posts.unshift(...newPost);
       })
       .catch((error) => {

@@ -55,7 +55,6 @@ const makeContainerPosts = ({ postsCard }, { posts, seenPosts }, i18n) => {
   const cardTitle = document.createElement('h2');
   cardTitle.classList.add('card-title', 'h4');
   cardTitle.textContent = i18n.t('cards.posts');
-  console.log(cardTitle.textContent);
 
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
