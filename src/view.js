@@ -15,6 +15,8 @@ const renderForm = ({ input, feedback }, { isValid, error }, i18n) => {
 };
 
 const makeContainerFeeds = ({ feedsCard }, { feeds }, i18n) => {
+  // eslint-disable-next-line no-param-reassign
+  feedsCard.innerHTML = '';
   const feedsContainer = document.createElement('div');
   feedsContainer.classList.add('card', 'border-0');
 
@@ -46,6 +48,8 @@ const makeContainerFeeds = ({ feedsCard }, { feeds }, i18n) => {
 };
 
 const makeContainerPosts = ({ postsCard }, { posts, seenPosts }, i18n) => {
+  // eslint-disable-next-line no-param-reassign
+  postsCard.innerHTML = '';
   const cardContainer = document.createElement('div');
   cardContainer.classList.add('card', 'border-0');
 
