@@ -1,11 +1,11 @@
 import * as yup from 'yup';
-import onChange from 'on-change';
 import i18next from 'i18next';
 import axios from 'axios';
 import _ from 'lodash';
-import render from './view.js';
+import watcher from './view.js';
 import resources from './locales/index.js';
 import parser from './parser.js';
+import yapLocale from './locales/yapSetLocale.js';
 
 const validate = (url, urls) => {
   const schema = yup.string().required().url().notOneOf(urls);
@@ -20,11 +20,11 @@ const addId = (posts, feedId) => posts.map((post) => ({
   id: _.uniqueId(),
 }));
 
-const parsedUrl = (url) => {
-  const copyUrl = new URL('https://allorigins.hexlet.app/get');
-  copyUrl.searchParams.set('url', url);
-  copyUrl.searchParams.set('disableCache', true);
-  return copyUrl.toString();
+const getProxi = (url) => {
+  const proxiUrl = new URL('https://allorigins.hexlet.app/get');
+  proxiUrl.searchParams.set('url', url);
+  proxiUrl.searchParams.set('disableCache', true);
+  return proxiUrl.toString();
 };
 
 const getError = (error) => {
@@ -42,7 +42,7 @@ const loadUrl = (url, watchedState) => {
   watchedState.loadingProcess = { status: 'loading', error: null };
 
   return axios
-    .get(parsedUrl(url))
+    .get(getProxi(url))
     .then((response) => response.data.contents)
     .then((contents) => {
       const { feed, posts } = parser(contents);
@@ -63,7 +63,7 @@ const loadUrl = (url, watchedState) => {
 
 const getUpdates = (watchedState) => {
   const feedUrl = watchedState.feeds.map(({ id, url }) => {
-    const request = axios.get(parsedUrl(url));
+    const request = axios.get(getProxi(url));
 
     return request
       .then((response) => {
@@ -84,7 +84,6 @@ export default () => {
   const initState = {
     form: {
       isValid: false,
-      urls: [],
       error: null,
     },
     loadingProcess: {
@@ -121,16 +120,9 @@ export default () => {
     resources,
   })
     .then(() => {
-      yup.setLocale({
-        mixed: {
-          required: 'notEmpty',
-          notOneOf: 'rssAlreadyExists',
-        },
-        string: {
-          url: 'invalidUrl',
-        },
-      });
-      const watchedState = onChange(initState, render(elements, initState, i18n));
+      yup.setLocale(yapLocale);
+
+      const watchedState = watcher(elements, initState, i18n);
 
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();

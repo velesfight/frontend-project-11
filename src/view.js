@@ -1,3 +1,5 @@
+import onChange from 'on-change';
+
 const renderForm = ({ input, feedback }, { isValid, error }, i18n) => {
   if (isValid) {
     input.classList.remove('is-invalid');
@@ -113,7 +115,7 @@ const hendler = ({
     case 'loading':
       submit.setAttribute('disabled', 'disabled');
       // eslint-disable-next-line no-param-reassign
-      input.readOnly = true;
+      input.readOnly = false;
       break;
     case 'success':
       // eslint-disable-next-line no-param-reassign
@@ -158,23 +160,23 @@ const makeModal = (elements, { posts, ui }) => {
   modalLink.setAttribute('href', link);
 };
 
-const render = (elements, state, i18n) => (path, value) => {
+const watcher = (elements, initState, i18n) => onChange(initState, (path, value) => {
   switch (path) {
     case 'form': renderForm(elements, value, i18n);
       break;
     case 'loadingProcess': hendler(elements, value, i18n);
       break;
-    case 'posts': makeContainerPosts(elements, state, i18n);
+    case 'posts': makeContainerPosts(elements, initState, i18n);
       break;
-    case 'feeds': makeContainerFeeds(elements, state, i18n);
+    case 'feeds': makeContainerFeeds(elements, initState, i18n);
       break;
-    case 'seenPosts': makeContainerPosts(elements, state, i18n);
+    case 'seenPosts': makeContainerPosts(elements, initState, i18n);
       break;
-    case 'ui.modalId': makeModal(elements, state);
+    case 'ui.modalId': makeModal(elements, initState);
       break;
     default:
       break;
   }
-};
+});
 
-export default render;
+export default watcher;

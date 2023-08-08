@@ -18,13 +18,6 @@
     "url": "https://github.com/hexlet-boilerplates/webpack-package/issues"
   },
   "homepage": "https://github.com/hexlet-boilerplates/webpack-package#readme",
-  "jest": {
-    "verbose": true,
-    "testEnvironmentOptions": {
-      "url": "http://localhost/"
-    },
-    "testEnvironment": "jsdom"
-  },
   "devDependencies": {
     "@babel/core": "^7.21.8",
     "@babel/eslint-parser": "^7.19.1",
@@ -45,9 +38,12 @@
     "jest-cli": "^29.3.1",
     "jest-environment-jsdom": "^29.3.1",
     "mini-css-extract-plugin": "^2.7.6",
+    "npm-check-updates": "^16.6.2",
     "postcss-loader": "^7.3.0",
     "postcss-preset-env": "^7.8.3",
     "prettier": "2.8.8",
+    "sass": "^1.62.1",
+    "sass-loader": "^13.3.0",
     "style-loader": "^3.3.3",
     "url-loader": "^4.1.1",
     "webpack": "^5.84.0",
@@ -55,15 +51,11 @@
     "webpack-dev-server": "^4.15.0"
   },
   "dependencies": {
-    "@npmcli/move-file": "^3.0.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "i18next": "^22.5.0",
     "lodash": "^4.17.21",
-    "npm-check-updates": "^16.6.2",
     "on-change": "^4.0.2",
-    "sass": "^1.62.1",
-    "sass-loader": "^13.3.0",
     "yup": "^1.2.0"
   },
   "keywords": [],
