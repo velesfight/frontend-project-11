@@ -5,6 +5,7 @@ plugins:
   - babel
 
 env:
+  node: true
   browser: true
 
 extends:
