@@ -69,8 +69,8 @@ const update = (watchedState) => {
     return request
       .then((response) => {
         const { posts } = parser(response.data.contents);
-        const postsLinks = watchedState.posts.map((post) => post.feedId === id);
-        const newPosts = posts.filter((post) => !postsLinks.includes(post.link));
+        const feedPosts = watchedState.posts.map((post) => post.feedId === id);
+        const newPosts = posts.filter((post) => !feedPosts.includes(post.link));
         const relatedPosts = addId(newPosts, id);
         watchedState.posts.unshift(...relatedPosts);
       })
