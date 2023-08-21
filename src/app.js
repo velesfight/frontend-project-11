@@ -8,7 +8,7 @@ import parser from './parser.js';
 import yapLocale from './locales/yapSetLocale.js';
 
 const updateTime = 5000;
-const weitingTime = 10000;
+const waitingTime = 10000;
 
 const validate = (url, urls) => {
   const schema = yup.string().required().url().notOneOf(urls);
@@ -45,7 +45,7 @@ const loadUrl = (url, watchedState) => {
   watchedState.loadingProcess = { status: 'loading', error: null };
 
   return axios
-    .get(addProxy(url), { timeout: weitingTime })
+    .get(addProxy(url), { timeout: waitingTime })
     .then((response) => {
       const { feed, posts } = parser(response.data.contents);
       feed.url = url;
@@ -64,7 +64,7 @@ const loadUrl = (url, watchedState) => {
 
 const update = (watchedState) => {
   const feedUrl = watchedState.feeds.map(({ id, url }) => {
-    const request = axios.get(addProxy(url));
+    const request = axios.get(addProxy(url), { timeout: waitingTime });
 
     return request
       .then((response) => {

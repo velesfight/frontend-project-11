@@ -16,25 +16,25 @@ const renderForm = ({ input, feedback }, { isValid, error }, i18n) => {
   }
 };
 
-const makeContainerFeeds = ({ feedsCard }, { feeds }, i18n) => {
+const renderFeeds = ({ feedsCard }, { feeds }, i18n) => {
   // eslint-disable-next-line no-param-reassign
   feedsCard.innerHTML = '';
   const feedsContainer = document.createElement('div');
   feedsContainer.classList.add('card', 'border-0');
 
-  const div = document.createElement('div');
-  div.classList.add('card-body');
-  const h2 = document.createElement('h2');
-  h2.classList.add('card-title', 'h4');
-  h2.textContent = i18n.t('cards.feeds');
-  div.appendChild(h2);
+  const divCard = document.createElement('div');
+  divCard.classList.add('card-body');
+  const h2Title = document.createElement('h2');
+  h2Title.classList.add('card-title', 'h4');
+  h2Title.textContent = i18n.t('cards.feeds');
+  divCard.appendChild(h2Title);
 
-  const ul = document.createElement('ul');
-  ul.classList.add('list-group', 'border-0', 'rounded-0');
+  const ulList = document.createElement('ul');
+  ulList.classList.add('list-group', 'border-0', 'rounded-0');
 
   feeds.forEach((feed) => {
-    const li = document.createElement('li');
-    li.classList.add('list-group-item', 'border-0', 'border-end-0');
+    const liListGroup = document.createElement('li');
+    liListGroup.classList.add('list-group-item', 'border-0', 'border-end-0');
 
     const title = document.createElement('h3');
     title.classList.add('h6', 'm-0');
@@ -44,12 +44,12 @@ const makeContainerFeeds = ({ feedsCard }, { feeds }, i18n) => {
     description.classList.add('m-0', 'small', 'text-black-50');
     description.textContent = feed.description;
 
-    feedsContainer.replaceChildren(div, ul, li, title, description);
+    feedsContainer.replaceChildren(divCard, ulList, liListGroup, title, description);
   });
   feedsCard.appendChild(feedsContainer);
 };
 
-const makeContainerPosts = ({ postsCard }, { posts, seenPosts }, i18n) => {
+const renderPosts = ({ postsCard }, { posts, seenPosts }, i18n) => {
   // eslint-disable-next-line no-param-reassign
   postsCard.innerHTML = '';
   const cardContainer = document.createElement('div');
@@ -62,8 +62,8 @@ const makeContainerPosts = ({ postsCard }, { posts, seenPosts }, i18n) => {
   cardTitle.classList.add('card-title', 'h4');
   cardTitle.textContent = i18n.t('cards.posts');
 
-  const ul = document.createElement('ul');
-  ul.classList.add('list-group', 'border-0', 'rounded-0');
+  const ulListGroup = document.createElement('ul');
+  ulListGroup.classList.add('list-group', 'border-0', 'rounded-0');
 
   cardBody.append(cardTitle);
   cardContainer.appendChild(cardBody);
@@ -78,8 +78,8 @@ const makeContainerPosts = ({ postsCard }, { posts, seenPosts }, i18n) => {
     button.setAttribute('data-bs-target', '#modal');
     button.textContent = i18n.t('cards.button');
 
-    const li = document.createElement('li');
-    li.classList.add(
+    const liGroupItem = document.createElement('li');
+    liGroupItem.classList.add(
       'list-group-item',
       'd-flex',
       'justify-content-between',
@@ -88,27 +88,27 @@ const makeContainerPosts = ({ postsCard }, { posts, seenPosts }, i18n) => {
       'border-end-0',
     );
 
-    const a = document.createElement('a');
-    a.setAttribute('href', `${post.link}`);
-    a.setAttribute('data-id', `${post.id}`);
-    a.setAttribute('target', '_blank');
-    a.setAttribute('rel', 'noopener noreferrer');
-    a.textContent = post.title;
+    const aPostTitle = document.createElement('a');
+    aPostTitle.setAttribute('href', `${post.link}`);
+    aPostTitle.setAttribute('data-id', `${post.id}`);
+    aPostTitle.setAttribute('target', '_blank');
+    aPostTitle.setAttribute('rel', 'noopener noreferrer');
+    aPostTitle.textContent = post.title;
 
     if (seenPosts.has(post.id)) {
-      a.classList.add('fw-normal', 'link-secondary');
+      aPostTitle.classList.add('fw-normal', 'link-secondary');
     } else {
-      a.classList.add('fw-bold');
+      aPostTitle.classList.add('fw-bold');
     }
 
-    li.append(a, button);
-    ul.append(li);
+    liGroupItem.append(aPostTitle, button);
+    ulListGroup.append(liGroupItem);
   });
-  cardContainer.replaceChildren(ul);
+  cardContainer.replaceChildren(ulListGroup);
   postsCard.appendChild(cardContainer);
 };
 
-const hendler = ({
+const render = ({
   form, input, feedback, submit,
 }, { status, error }, i18n) => {
   switch (status) {
@@ -118,10 +118,8 @@ const hendler = ({
       input.readOnly = false;
       break;
     case 'success':
-      // eslint-disable-next-line no-param-reassign
       submit.removeAttribute('disabled');
       feedback.classList.add('text-success');
-      submit.removeAttribute('disabled');
       // eslint-disable-next-line no-param-reassign
       input.readOnly = false;
       // eslint-disable-next-line no-param-reassign
@@ -141,7 +139,7 @@ const hendler = ({
   }
 };
 
-const makeModal = (elements, { posts, ui }) => {
+const renderModal = (elements, { posts, ui }) => {
   const {
     modal,
     modalTitle,
@@ -164,15 +162,15 @@ const watcher = (elements, initState, i18n) => onChange(initState, (path, value)
   switch (path) {
     case 'form': renderForm(elements, value, i18n);
       break;
-    case 'loadingProcess': hendler(elements, value, i18n);
+    case 'loadingProcess': render(elements, value, i18n);
       break;
-    case 'posts': makeContainerPosts(elements, initState, i18n);
+    case 'posts': renderPosts(elements, initState, i18n);
       break;
-    case 'feeds': makeContainerFeeds(elements, initState, i18n);
+    case 'feeds': renderFeeds(elements, initState, i18n);
       break;
-    case 'seenPosts': makeContainerPosts(elements, initState, i18n);
+    case 'seenPosts': renderPosts(elements, initState, i18n);
       break;
-    case 'ui.modalId': makeModal(elements, initState);
+    case 'ui.modalId': renderModal(elements, initState);
       break;
     default:
       break;
